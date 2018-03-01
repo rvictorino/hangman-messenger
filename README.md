@@ -21,7 +21,7 @@ A Messenger hangman game
 - [ ] Implement multiple languages selection
 
 
-##Doc
+## Doc
 
 > mkdir hangman-messenger
 > cd hangman-messenger
