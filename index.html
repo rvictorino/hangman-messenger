@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Testing client View</title>
+  </head>
+  <body>
+      <input id="userId" type="number" name="userId" value="0" min="0">
+      <input id="letter" type="text" name="letter" value="" maxlength="1">
+      <input id="submit" type="button" value="Try">
+      <input id="new" type="button" value="New Game">
+      <canvas id="content" height="200" width="500"/>
+      <script type="text/javascript">
+        let game = {}
+        let submitButton = document.getElementById('submit')
+        submitButton.addEventListener('click', function() {
+          let letter = document.getElementById('letter').value
+          let content = document.getElementById('content').innerHTML
+
+          var xhttp = new XMLHttpRequest()
+          xhttp.onreadystatechange = updateContent
+          xhttp.open('POST', '/guess/' + game.id, true);
+          xhttp.setRequestHeader("Content-type", "application/json")
+          xhttp.send('{"letter":"' + letter + '"}')
+        })
+
+        let newGameButton = document.getElementById('new')
+        newGameButton.addEventListener('click', function() {
+          let userId = document.getElementById('userId').value
+
+          var xhttp = new XMLHttpRequest()
+          xhttp.onreadystatechange = updateContent
+          xhttp.open('GET', '/new/' + userId, true);
+          xhttp.send()
+        })
+
+        function updateContent() {
+          if (this.readyState != 4 || this.status != 200) {
+            return
+          }
+
+          // clear form
+          let letter = document.getElementById('letter')
+          letter.value = ''
+
+          game = JSON.parse(this.responseText)
+          console.log(game)
+
+          let canvas = document.getElementById('content')
+          let context = canvas.getContext('2d')
+          context.font = '12px Arial'
+          context.fillStyle = "white"
+          context.fillRect(0, 0, canvas.width, canvas.height)
+          context.fillStyle = "black"
+          let alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+          context.fillText(game.word.split('').map( c => game.foundLetters.includes(c) ? c : '_').join(' '), 0, 124)
+
+          alpha.split('').forEach( (c, i) => {
+            context.fillText(c, 64 + i * 16, 148)
+            if(game.failingLetters.includes(c)){
+              context.beginPath()
+              context.strokeStyle = "black"
+              context.rect(64 + i * 16 - 4, 136, 16, 16)
+              context.stroke()
+            }
+          })
+
+          var hangmanImg = new Image()
+          hangmanImg.src = 'assets/img/hangman.png'
+          //                img       , image x          ,iy, iw, ih, cx, cy, cw, ch
+          context.drawImage(hangmanImg, 64 * game.hangman, 0, 64, 64, 0, 136, 64, 64)
+
+          switch(game.status) {
+            case 'in_progress': // IN_PROGRESS
+              break
+            case 'won': // WON
+              context.fillText("You win!", 64, 136)
+              break
+            case 'lost': // LOST
+              context.fillText("You lose!", 64, 136)
+              break
+          }
+        }
+      </script>
+  </body>
+</html>
