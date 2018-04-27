@@ -18,9 +18,9 @@
   "homepage": "https://github.com/rvictorino/hangman-messenger#readme",
   "dependencies": {
     "body-parser": "^1.18.2",
-    "express": "^4.16.2",
-    "nodemon": "^1.17.2",
+    "express": "^4.16.3",
+    "nodemon": "^1.17.3",
     "npm": "^6.0.0",
-    "request": "^2.83.0"
+    "request": "^2.85.0"
   }
 }
