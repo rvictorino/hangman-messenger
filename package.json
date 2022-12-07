@@ -20,7 +20,7 @@
     "body-parser": "^1.18.2",
     "cryptiles": ">=4.1.2",
     "deep-extend": ">=0.5.1",
-    "express": "^4.16.3",
+    "express": "^4.17.3",
     "nodemon": "^1.18.10",
     "npm": "^6.14.8",
     "request": "^2.88.0"
